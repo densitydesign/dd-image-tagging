@@ -76,7 +76,7 @@ function predict(data, model, api, index, chunksRemaining) {
     });
 
     if (window.Worker) {
-        let csvBuilder = new Worker('/js/csv-worker.js');
+        let csvBuilder = new Worker('./js/csv-worker.js');
 
         app.models.initModel({
             id: model
@@ -165,7 +165,7 @@ function doDrop(event) {
     if (file.type == "text/csv") {
 
         if (window.Worker) {
-            var parser = new Worker('/js/parser-worker.js');
+            var parser = new Worker('./js/parser-worker.js');
 
             parser.postMessage(file);
 
