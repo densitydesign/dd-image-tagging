@@ -1,0 +1,216 @@
+html {
+    --container-width: 1140px;
+    --grid-row: 30px;
+    --color-text: #000000;
+    --color-background: #ffffff;
+    --color-disabled: #aaaaaa;
+
+    font-family: 'Muli', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+@-webkit-keyframes processing {
+    0% { opacity: 0; }
+    40% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes processing {
+    0% { opacity: 0; }
+    20% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+input, select, button{
+    font-family: inherit;
+    font-size: 0.8rem;
+}
+
+body, h1, h2, p {
+    margin: 0;
+}
+
+p {
+    margin-bottom: 0.4rem;
+    line-height: 1.35;
+}
+
+a, a:hover, a:visited {
+    color: var(--color-text);
+}
+
+.container {
+    width: var(--container-width);
+    margin: 0 auto;
+}
+
+header.container {
+    margin-top: 5rem;
+    margin-bottom: 4rem;
+}
+
+h1 {
+    letter-spacing: 0.5px;
+    margin-bottom: 1.2rem;
+}
+
+header p {
+    width: calc(var(--container-width) * 0.45);
+}
+
+main {
+    display: grid;
+    grid-template:  "api input" var(--grid-row)
+                    "model input" var(--grid-row)
+                    "description input" var(--grid-row)
+                    "description input" var(--grid-row)
+                    "description input" var(--grid-row)
+                    "description input" var(--grid-row)
+                    "description input" var(--grid-row)
+                    "process process" calc(var(--grid-row) * 1.5) / 1fr 1fr;
+    grid-gap: 20px;
+}
+
+h2 {
+    font-size: 1.4rem;
+}
+
+.input__API {
+    grid-area: api;
+}
+
+.input__model {
+    grid-area: model;
+}
+
+.input__description {
+    grid-area: description;
+}
+
+.input__description p {
+    width: 90%;
+}
+
+#input__csv {
+    grid-area: input;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    margin: 0.5rem;
+    border: 2px dashed var(--color-text);
+    border-radius: 15px;
+    text-align: center;
+    -webkit-transition: margin 0.5s ease;
+    transition: margin 0.5s ease;
+}
+
+#input__csv span {
+    font-weight: 900;
+}
+
+#input__csv.drop-hover {
+    margin: 0rem;
+}
+
+#input__button {
+    grid-area: process;
+    position: relative;
+    margin: 0 23rem;
+    cursor: not-allowed;
+    background-color: transparent;
+    border: 2px solid var(--color-disabled);
+    border-radius: 4px;
+    color: var(--color-disabled);
+    font-weight: 900;
+    text-transform: uppercase;
+    -webkit-transition: color 0.3s, border-color 0.3s;
+    transition: color 0.3s, border-color 0.3s;
+}
+
+#input__button.process-ready {
+    border: 2px solid var(--color-text);
+    color: var(--color-background);
+    cursor: pointer;
+}
+
+#input__button::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-text);
+    opacity: 0;
+    z-index: -1;
+    -webkit-transition: opacity 0.3s;
+    transition: opacity 0.3s;
+}
+
+#input__button.process-ready::after {
+    opacity: 1;
+}
+
+#input__button.process-ready:hover {
+    color: var(--color-text);
+}
+
+#input__button.process-ready:hover::after {
+    opacity: 0;
+}
+
+#input__button.process-ready.process-going:hover {
+    color: var(--color-background);
+}
+
+#input__button.process-ready.process-going:hover::after {
+    opacity: 1;
+}
+
+#input__button span {
+    padding-left: 0.1rem;
+    opacity: 0;
+    -webkit-animation: processing 0.6s ease infinite alternate;
+            animation: processing 0.6s ease infinite alternate;
+}
+
+#input__button span:first-child {
+    padding-left: 0.4rem;
+}
+
+#input__button span:nth-child(2) {
+    -webkit-animation-delay: 0.2s;
+            animation-delay: 0.2s;
+}
+
+#input__button span:nth-child(3) {
+    -webkit-animation-delay: 0.4s;
+            animation-delay: 0.4s;
+}
+
+.output__link {
+    display: block;
+    margin: 1rem 0;
+    position: relative;
+}
+
+.output__link::after {
+    content: "\2193";
+    position: absolute;
+    top: 0;
+    left: -0.8rem;
+    -webkit-transition: top 0.3s ease;
+    transition: top 0.3s ease;
+}
+
+.output__link:hover::after {
+    top: 5px;
+}

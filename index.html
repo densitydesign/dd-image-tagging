@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>DensityDesign Image Tagging tool</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Muli:400,900" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <header class="container">
+        <h1>DensityDesign Image tagging tool</h1>
+        <p>This tool is an easier interface to the <a href="https://clarifai.com/" target="_blank">Clarifai API</a> for people who either don't want to code or don't want to bother to learn how to use the API. What this API does in short is that it takes a list of images (in the form of urls) and outputs what an algorithm, also called a model, "sees" in these images.</p>
+        <p>Different models are specialized in "seeing" different things. Some were trained to pick out colors, others are great at identifying celebrities, so choose the model that most suits you for the job. Remember that they are not perfect, just like humans, so they may make mistakes (sometimes big ones).</p>
+        <p>The input should be a .csv file with all the image urls in one column with a header.</p>
+    </header>
+
+    <main class="container">
+        <div class="input__API">
+            <label for="API-key">Clarifai API Key: </label>
+            <input type="text" id="API-key" value="" placeholder="Insert a valid Clarifai API Key" size="32">
+        </div>
+
+        <div class="input__model">
+            <label for="model-select">Select a Clarifai Model:</label>
+            <select id="model-select">
+                <option value="aaa03c23b3724a16a56b629203edc62c">General</option>
+                <option value="e0be3b9d6a454f0493ac3a30784001ff">Apparel</option>
+                <option value="e466caa0619f444ab97497640cefc4dc">Celebrity</option>
+                <option value="eeed0b6733a644cea07cf4c60f87ebb7">Color</option>
+                <option value="c0c0ac362b03416da06ab3fa36fb58e3">Demographics</option>
+                <option value="a403429f2ddf4b49b307e318f00e528b">Face Detection</option>
+                <option value="bd367be194cf45149e75f01d59f77ba7">Food</option>
+                <option value="d16f390eb32cad478c7ae150069bd2c6">Moderation</option>
+                <option value="e9576d86d2004ed1a38ba0cf39ecb4b1">NSFW</option>
+                <option value="fbefb47f9fdb410e8ce14f24f54b47ff">Textures and Patterns</option>
+                <option value="eee28c313d69466f836ab83287a54ed9">Travel</option>
+            </select>
+        </div>
+
+        <div class="input__description">
+            <h2 id="description__title">Model: <span id="description__model"></span></h2>
+            <p id="description__text"></p>
+        </div>
+
+        <div id="input__csv">
+            <p id="dropzone-text">Drag & drop a .csv file here</p>
+        </div>
+
+        <button id="input__button" type="button">Process input file<span></span></button>
+    </main>
+
+    <section class="container" id="output__links">
+
+    </section>
+
+    <script type="text/javascript" src="https://sdk.clarifai.com/js/clarifai-latest.js"></script>
+    <script type="text/javascript" src="https://d3js.org/d3-dsv.v1.min.js"></script>
+    <script src="/js/main.js" charset="utf-8"></script>
+</body>
+
+</html>
