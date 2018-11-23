@@ -1,5 +1,5 @@
 html {
-    --container-width: 1140px;
+    --container-width: 580px;
     --grid-row: 30px;
     --color-text: #000000;
     --color-background: #ffffff;
@@ -47,7 +47,7 @@ a, a:hover, a:visited {
 
 header.container {
     margin-top: 5rem;
-    margin-bottom: 4rem;
+    margin-bottom: 3rem;
 }
 
 h1 {
@@ -56,36 +56,35 @@ h1 {
 }
 
 header p {
-    width: calc(var(--container-width) * 0.45);
+    width: calc(var(--container-width) * 0.9);
 }
 
-main {
+main.container {
     display: grid;
-    grid-template:  "api input" var(--grid-row)
-                    "model input" var(--grid-row)
-                    "description input" var(--grid-row)
-                    "description input" var(--grid-row)
-                    "description input" var(--grid-row)
-                    "description input" var(--grid-row)
-                    "description input" var(--grid-row)
-                    "process process" calc(var(--grid-row) * 1.5) / 1fr 1fr;
+    grid-template-rows: [api] var(--grid-row) [model] var(--grid-row) [description] repeat(4, var(--grid-row)) [input] repeat(5, var(--grid-row)) [process] calc(var(--grid-row) * 1.5);
+    grid-template-columns: var(--container-width);
     grid-gap: 20px;
+    margin-bottom: 2rem;
 }
 
 h2 {
     font-size: 1.4rem;
 }
 
+main > div, main button {
+    grid-column: 1;
+}
+
 .input__API {
-    grid-area: api;
+    grid-row: api / span 1;
 }
 
 .input__model {
-    grid-area: model;
+    grid-row: model / span 1;
 }
 
 .input__description {
-    grid-area: description;
+    grid-row: description / span 4;
 }
 
 .input__description p {
@@ -93,7 +92,7 @@ h2 {
 }
 
 #input__csv {
-    grid-area: input;
+    grid-row: input / span 5;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -121,9 +120,8 @@ h2 {
 }
 
 #input__button {
-    grid-area: process;
+    grid-row: process / span 1;
     position: relative;
-    margin: 0 23rem;
     cursor: not-allowed;
     background-color: transparent;
     border: 2px solid var(--color-disabled);
@@ -213,4 +211,8 @@ h2 {
 
 .output__link:hover::after {
     top: 5px;
+}
+
+section.container {
+    margin-bottom: 6rem;
 }
