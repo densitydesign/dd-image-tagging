@@ -9,7 +9,7 @@ onmessage = function(e) {
     reader.onload = function(event) {
         let data = d3.csvParse(event.target.result, function(d, i, a) {
             let colName = a[0];
-            return d[colName];
+            return encodeURI(d[colName]);
         });
 
         let splitData = [];
