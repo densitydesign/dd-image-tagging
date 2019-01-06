@@ -103,28 +103,32 @@ onmessage = function(e) {
                                 mean += (newAge * factor);
                                 factors += factor;
                             }
-                            for (let k = 0; k < faces['data']['face']['gender_appearance']['concepts'].length; k++) {
-                                let confidence = faces['data']['face']['gender_appearance']['concepts'][k]['value'];
-                                if (+confidence >= 0.1) {
-                                    let newGender = faces['data']['face']['gender_appearance']['concepts'][k]['name'].concat(' - ', confidence);
-                                    if (gender.length > 0) {
-                                        gender = gender.concat('|', newGender);
-                                    } else {
-                                        gender = newGender;
-                                    }
-                                }
-                            }
-                            for (let k = 0; k < faces['data']['face']['multicultural_appearance']['concepts'].length; k++) {
-                                let confidence = faces['data']['face']['multicultural_appearance']['concepts'][k]['value'];
-                                if (+confidence >= 0.1) {
-                                    let newCulture = faces['data']['face']['multicultural_appearance']['concepts'][k]['name'].concat(' - ', confidence);
-                                    if (multicultural.length > 0) {
-                                        multicultural = multicultural.concat('|', newCulture);
-                                    } else {
-                                        multicultural = newCulture;
-                                    }
-                                }
-                            }
+
+                            // for (let k = 0; k < faces['data']['face']['gender_appearance']['concepts'].length; k++) {
+                            //     let confidence = faces['data']['face']['gender_appearance']['concepts'][k]['value'];
+                            //     if (+confidence >= 0.1) {
+                            //         let newGender = faces['data']['face']['gender_appearance']['concepts'][k]['name'].concat(' - ', confidence);
+                            //         if (gender.length > 0) {
+                            //             gender = gender.concat('|', newGender);
+                            //         } else {
+                            //             gender = newGender;
+                            //         }
+                            //     }
+                            // }
+                            gender = faces['data']['face']['gender_appearance']['concepts'][0]['name'];
+
+                            // for (let k = 0; k < faces['data']['face']['multicultural_appearance']['concepts'].length; k++) {
+                            //     let confidence = faces['data']['face']['multicultural_appearance']['concepts'][k]['value'];
+                            //     if (+confidence >= 0.1) {
+                            //         let newCulture = faces['data']['face']['multicultural_appearance']['concepts'][k]['name'].concat(' - ', confidence);
+                            //         if (multicultural.length > 0) {
+                            //             multicultural = multicultural.concat('|', newCulture);
+                            //         } else {
+                            //             multicultural = newCulture;
+                            //         }
+                            //     }
+                            // }
+                            multicultural = faces['data']['face']['multicultural_appearance']['concepts'][0]['name'];
 
                             age = Math.round(mean / factors);
 
@@ -133,7 +137,12 @@ onmessage = function(e) {
                                 age: age,
                                 gender: gender,
                                 multicultural: multicultural,
-                                bbox: bbox,
+                                bbox_bottom: bbox.bottom_row,
+                                bbox_left: bbox.left_col,
+                                bbox_right: bbox.right_col,
+                                bbox_top: bbox.top_row,
+                                bbox_x: bbox.right_col - bbox.left_col,
+                                bbox_y: bbox.bottom_row - bbox.top_row
                             });
                         }
                     }
