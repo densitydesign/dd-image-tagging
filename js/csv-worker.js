@@ -1,5 +1,7 @@
 onmessage = function(e) {
 
+    console.log(e)
+
     let conceptsArray = [];
 
     for (let i = 0; i < e.data['response'].length; i++) {
@@ -65,10 +67,12 @@ onmessage = function(e) {
                     for (let j = 0; j < output['data']['colors'].length; j++) {
                         let color = output['data']['colors'][j]['raw_hex'];
                         let density = output['data']['colors'][j]['value'];
+                        let colorName = output['data']['colors'][j]['w3c']['name'];
 
                         conceptsArray.push({
                             url: imageUrl,
-                            color: color,
+                            name: colorName,
+                            hex: color,
                             density: +density
                         });
                     }
