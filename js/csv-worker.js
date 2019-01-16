@@ -5,7 +5,7 @@ onmessage = function (e) {
     for (let i = 0; i < e.data['response'].length; i++) {
         let output = e.data['response'][i];
         let imageUrl = output['input']['data']['image']['url'];
-        
+
         if (e.data['model']['givesConcepts']) {
             if (Object.keys(output['data']).length === 0 && output['data'].constructor === Object) {
                 conceptsArray.push({
@@ -51,7 +51,9 @@ onmessage = function (e) {
                             bbox_border_top: null,
                             bbox_border_bottom: null,
                             bbox_border_left: null,
-                            bbox_border_right: null
+                            bbox_border_right: null,
+                            bbox_area_x: null,
+                            bbox_area_y: null
                         });
                     } else {
                         for (let j = 0; j < output['data']['regions'].length; j++) {
@@ -72,7 +74,9 @@ onmessage = function (e) {
                                         bbox_border_top: Math.round(bbox.top_row * 100) + '%',
                                         bbox_border_bottom: Math.round(bbox.bottom_row * 100) + '%',
                                         bbox_border_left: Math.round(bbox.left_col * 100) + '%',
-                                        bbox_border_right: Math.round(bbox.right_col * 100) + '%'
+                                        bbox_border_right: Math.round(bbox.right_col * 100) + '%',
+                                        bbox_area_x: Math.round(bbox.right_col * 100) - Math.round(bbox.left_col * 100) + '%',
+                                        bbox_area_y: Math.round(bbox.bottom_row * 100) - Math.round(bbox.top_row * 100) + '%'
                                     });
                                 }
                             }
@@ -84,7 +88,9 @@ onmessage = function (e) {
                                     bbox_border_top: null,
                                     bbox_border_bottom: null,
                                     bbox_border_left: null,
-                                    bbox_border_right: null
+                                    bbox_border_right: null,
+                                    bbox_area_x: null,
+                                    bbox_area_y: null
                                 });
                             }
                         }
@@ -117,7 +123,9 @@ onmessage = function (e) {
                             bbox_border_top: null,
                             bbox_border_bottom: null,
                             bbox_border_left: null,
-                            bbox_border_right: null
+                            bbox_border_right: null,
+                            bbox_area_x: null,
+                            bbox_area_y: null
                         });
                     } else {
                         for (let j = 0; j < output['data']['regions'].length; j++) {
@@ -168,7 +176,9 @@ onmessage = function (e) {
                                     bbox_border_top: null,
                                     bbox_border_bottom: null,
                                     bbox_border_left: null,
-                                    bbox_border_right: null
+                                    bbox_border_right: null,
+                                    bbox_area_x: null,
+                                    bbox_area_y: null
                                 });
                             } else {
                                 age = Math.round(mean / factors);
@@ -182,7 +192,9 @@ onmessage = function (e) {
                                     bbox_border_top: Math.round(bbox.top_row * 100) + '%',
                                     bbox_border_bottom: Math.round(bbox.bottom_row * 100) + '%',
                                     bbox_border_left: Math.round(bbox.left_col * 100) + '%',
-                                    bbox_border_right: Math.round(bbox.right_col * 100) + '%'
+                                    bbox_border_right: Math.round(bbox.right_col * 100) + '%',
+                                    bbox_area_x: Math.round(bbox.right_col * 100) - Math.round(bbox.left_col * 100) + '%',
+                                    bbox_area_y: Math.round(bbox.bottom_row * 100) - Math.round(bbox.top_row * 100) + '%'
                                 });
                             }
                         }
@@ -196,7 +208,9 @@ onmessage = function (e) {
                             bbox_border_top: null,
                             bbox_border_bottom: null,
                             bbox_border_left: null,
-                            bbox_border_right: null
+                            bbox_border_right: null,
+                            bbox_area_x: null,
+                            bbox_area_y: null
                         });
                     } else {
                         for (let j = 0; j < output['data']['regions'].length; j++) {
@@ -208,7 +222,9 @@ onmessage = function (e) {
                                 bbox_border_top: Math.round(bbox.top_row * 100) + '%',
                                 bbox_border_bottom: Math.round(bbox.bottom_row * 100) + '%',
                                 bbox_border_left: Math.round(bbox.left_col * 100) + '%',
-                                bbox_border_right: Math.round(bbox.right_col * 100) + '%'
+                                bbox_border_right: Math.round(bbox.right_col * 100) + '%',
+                                bbox_area_x: Math.round(bbox.right_col * 100) - Math.round(bbox.left_col * 100) + '%',
+                                bbox_area_y: Math.round(bbox.bottom_row * 100) - Math.round(bbox.top_row * 100) + '%'
                             });
                         }
                     }
