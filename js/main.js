@@ -193,6 +193,8 @@ function doDrop(event) {
     } else {
         $dropzoneText.innerText = "This is not a csv!"
     }
+
+    finalData = [];
 }
 
 $inputAPI.addEventListener('input', function(event){
@@ -206,12 +208,14 @@ $inputAPI.addEventListener('input', function(event){
         apiCheck = false;
         $button.classList.remove("process-ready");
     }
+    finalData = [];
 });
 
 $select.addEventListener('change', function(event){
     let modelId = event.currentTarget.selectedOptions[0].value;
 
     updateModelDesc(modelId);
+    finalData = [];
 });
 
 $dropzone.addEventListener('dragover', function(event){

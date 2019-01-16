@@ -1,6 +1,4 @@
-onmessage = function(e) {
-
-    console.log(e)
+onmessage = function (e) {
 
     let conceptsArray = [];
 
@@ -12,13 +10,16 @@ onmessage = function(e) {
             if (Object.keys(output['data']).length === 0 && output['data'].constructor === Object) {
                 conceptsArray.push({
                     url: imageUrl,
-                    concept: null,
+                    concept: 'No elements present',
                     confidence: null
                 });
             } else {
+                let maxConfidence = 0;
+
                 for (let j = 0; j < output['data']['concepts'].length; j++) {
                     let concept = output['data']['concepts'][j]['name'];
                     let confidence = output['data']['concepts'][j]['value'];
+                    maxConfidence = Math.max(maxConfidence, confidence);
 
                     if (+confidence >= 0.1) {
                         conceptsArray.push({
@@ -27,6 +28,14 @@ onmessage = function(e) {
                             confidence: +confidence
                         });
                     }
+                }
+
+                if (maxConfidence < 0.1) {
+                    conceptsArray.push({
+                        url: imageUrl,
+                        concept: 'No elements present',
+                        confidence: null
+                    });
                 }
             }
 
@@ -38,26 +47,51 @@ onmessage = function(e) {
                         conceptsArray.push({
                             url: imageUrl,
                             celebrity: 'No celebrity present',
-                            bbox: null,
-                            confidence: null
+                            confidence: null,
+                            bbox_border_top: null,
+                            bbox_border_bottom: null,
+                            bbox_border_left: null,
+                            bbox_border_right: null,
+                            bbox_area_x: null,
+                            bbox_area_y: null
                         });
                     } else {
                         for (let j = 0; j < output['data']['regions'].length; j++) {
                             let regions = output['data']['regions'][j];
                             let bbox = regions['region_info']['bounding_box'];
+                            let maxConfidence = 0;
 
                             for (let k = 0; k < regions['data']['face']['identity']['concepts'].length; k++) {
                                 let celebrity = regions['data']['face']['identity']['concepts'][k]['name'];
                                 let confidence = regions['data']['face']['identity']['concepts'][k]['value'];
+                                maxConfidence = Math.max(maxConfidence, confidence);
 
                                 if (+confidence >= 0.1) {
                                     conceptsArray.push({
                                         url: imageUrl,
                                         celebrity: celebrity,
-                                        bbox: bbox,
-                                        confidence: +confidence
+                                        confidence: +confidence,
+                                        bbox_border_top: Math.round(bbox.top_row * 100) + '%',
+                                        bbox_border_bottom: Math.round(bbox.bottom_row * 100) + '%',
+                                        bbox_border_left: Math.round(bbox.left_col * 100) + '%',
+                                        bbox_border_right: Math.round(bbox.right_col * 100) + '%',
+                                        bbox_area_x: Math.round(bbox.right_col * 100) - Math.round(bbox.left_col * 100) + '%',
+                                        bbox_area_y: Math.round(bbox.bottom_row * 100) - Math.round(bbox.top_row * 100) + '%'
                                     });
                                 }
+                            }
+                            if (maxConfidence < 0.1) {
+                                conceptsArray.push({
+                                    url: imageUrl,
+                                    celebrity: 'No celebrity present',
+                                    confidence: null,
+                                    bbox_border_top: null,
+                                    bbox_border_bottom: null,
+                                    bbox_border_left: null,
+                                    bbox_border_right: null,
+                                    bbox_area_x: null,
+                                    bbox_area_y: null
+                                });
                             }
                         }
                     }
@@ -82,10 +116,16 @@ onmessage = function(e) {
                     if (Object.keys(output['data']).length === 0 && output['data'].constructor === Object) {
                         conceptsArray.push({
                             url: imageUrl,
+                            person_present: false,
                             age: null,
                             gender: null,
                             multicultural: null,
-                            bbox: null,
+                            bbox_border_top: null,
+                            bbox_border_bottom: null,
+                            bbox_border_left: null,
+                            bbox_border_right: null,
+                            bbox_area_x: null,
+                            bbox_area_y: null
                         });
                     } else {
                         for (let j = 0; j < output['data']['regions'].length; j++) {
@@ -103,47 +143,60 @@ onmessage = function(e) {
                                 mean += (newAge * factor);
                                 factors += factor;
                             }
+                            for (let k = 0; k < faces['data']['face']['gender_appearance']['concepts'].length; k++) {
+                                let confidence = faces['data']['face']['gender_appearance']['concepts'][k]['value'];
+                                if (+confidence >= 0.1) {
+                                    let newGender = faces['data']['face']['gender_appearance']['concepts'][k]['name'].concat(' - ', confidence);
+                                    if (gender.length > 0) {
+                                        gender = gender.concat('|', newGender);
+                                    } else {
+                                        gender = newGender;
+                                    }
+                                }
+                            }
+                            for (let k = 0; k < faces['data']['face']['multicultural_appearance']['concepts'].length; k++) {
+                                let confidence = faces['data']['face']['multicultural_appearance']['concepts'][k]['value'];
+                                if (+confidence >= 0.1) {
+                                    let newCulture = faces['data']['face']['multicultural_appearance']['concepts'][k]['name'].concat(' - ', confidence);
+                                    if (multicultural.length > 0) {
+                                        multicultural = multicultural.concat('|', newCulture);
+                                    } else {
+                                        multicultural = newCulture;
+                                    }
+                                }
+                            }
 
-                            // for (let k = 0; k < faces['data']['face']['gender_appearance']['concepts'].length; k++) {
-                            //     let confidence = faces['data']['face']['gender_appearance']['concepts'][k]['value'];
-                            //     if (+confidence >= 0.1) {
-                            //         let newGender = faces['data']['face']['gender_appearance']['concepts'][k]['name'].concat(' - ', confidence);
-                            //         if (gender.length > 0) {
-                            //             gender = gender.concat('|', newGender);
-                            //         } else {
-                            //             gender = newGender;
-                            //         }
-                            //     }
-                            // }
-                            gender = faces['data']['face']['gender_appearance']['concepts'][0]['name'];
+                            if (mean == 0) {
+                                conceptsArray.push({
+                                    url: imageUrl,
+                                    person_present: false,
+                                    age: null,
+                                    gender: null,
+                                    multicultural: null,
+                                    bbox_border_top: null,
+                                    bbox_border_bottom: null,
+                                    bbox_border_left: null,
+                                    bbox_border_right: null,
+                                    bbox_area_x: null,
+                                    bbox_area_y: null
+                                });
+                            } else {
+                                age = Math.round(mean / factors);
 
-                            // for (let k = 0; k < faces['data']['face']['multicultural_appearance']['concepts'].length; k++) {
-                            //     let confidence = faces['data']['face']['multicultural_appearance']['concepts'][k]['value'];
-                            //     if (+confidence >= 0.1) {
-                            //         let newCulture = faces['data']['face']['multicultural_appearance']['concepts'][k]['name'].concat(' - ', confidence);
-                            //         if (multicultural.length > 0) {
-                            //             multicultural = multicultural.concat('|', newCulture);
-                            //         } else {
-                            //             multicultural = newCulture;
-                            //         }
-                            //     }
-                            // }
-                            multicultural = faces['data']['face']['multicultural_appearance']['concepts'][0]['name'];
-
-                            age = Math.round(mean / factors);
-
-                            conceptsArray.push({
-                                url: imageUrl,
-                                age: age,
-                                gender: gender,
-                                multicultural: multicultural,
-                                bbox_bottom: bbox.bottom_row,
-                                bbox_left: bbox.left_col,
-                                bbox_right: bbox.right_col,
-                                bbox_top: bbox.top_row,
-                                bbox_x: bbox.right_col - bbox.left_col,
-                                bbox_y: bbox.bottom_row - bbox.top_row
-                            });
+                                conceptsArray.push({
+                                    url: imageUrl,
+                                    person_present: true,
+                                    age: age,
+                                    gender: gender,
+                                    multicultural: multicultural,
+                                    bbox_border_top: Math.round(bbox.top_row * 100) + '%',
+                                    bbox_border_bottom: Math.round(bbox.bottom_row * 100) + '%',
+                                    bbox_border_left: Math.round(bbox.left_col * 100) + '%',
+                                    bbox_border_right: Math.round(bbox.right_col * 100) + '%',
+                                    bbox_area_x: Math.round(bbox.right_col * 100) - Math.round(bbox.left_col * 100) + '%',
+                                    bbox_area_y: Math.round(bbox.bottom_row * 100) - Math.round(bbox.top_row * 100) + '%'
+                                });
+                            }
                         }
                     }
                     break;
@@ -152,7 +205,12 @@ onmessage = function(e) {
                     if (Object.keys(output['data']).length === 0 && output['data'].constructor === Object) {
                         conceptsArray.push({
                             url: imageUrl,
-                            bbox: null
+                            bbox_border_top: null,
+                            bbox_border_bottom: null,
+                            bbox_border_left: null,
+                            bbox_border_right: null,
+                            bbox_area_x: null,
+                            bbox_area_y: null
                         });
                     } else {
                         for (let j = 0; j < output['data']['regions'].length; j++) {
@@ -161,7 +219,12 @@ onmessage = function(e) {
 
                             conceptsArray.push({
                                 url: imageUrl,
-                                bbox: bbox
+                                bbox_border_top: Math.round(bbox.top_row * 100) + '%',
+                                bbox_border_bottom: Math.round(bbox.bottom_row * 100) + '%',
+                                bbox_border_left: Math.round(bbox.left_col * 100) + '%',
+                                bbox_border_right: Math.round(bbox.right_col * 100) + '%',
+                                bbox_area_x: Math.round(bbox.right_col * 100) - Math.round(bbox.left_col * 100) + '%',
+                                bbox_area_y: Math.round(bbox.bottom_row * 100) - Math.round(bbox.top_row * 100) + '%'
                             });
                         }
                     }
